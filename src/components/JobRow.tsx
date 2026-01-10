@@ -10,15 +10,15 @@ interface JobRowProps {
 const getStatusColor = (status: string) => {
   const statusLower = status.toLowerCase();
   if (statusLower === "completed" || statusLower === "success") {
-    return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
+    return "text-gray-700 bg-gray-100 border-gray-300";
   }
   if (statusLower === "failed" || statusLower === "error") {
-    return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
+    return "text-red-600 bg-red-50 border-red-300";
   }
   if (statusLower === "running" || statusLower === "processing") {
-    return "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400";
+    return "text-[#0066FF] bg-[#0066FF]/10 border-[#0066FF]";
   }
-  return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300";
+  return "text-gray-500 bg-gray-50 border-gray-300";
 };
 
 export default function JobRow({ job }: JobRowProps) {
@@ -62,12 +62,13 @@ export default function JobRow({ job }: JobRowProps) {
     try {
       const date = new Date(isoString);
       return new Intl.DateTimeFormat("en-US", {
-        month: "short",
-        day: "numeric",
+        month: "2-digit",
+        day: "2-digit",
         year: "numeric",
         hour: "2-digit",
         minute: "2-digit",
-      }).format(date);
+        hour12: false,
+      }).format(date).replace(",", "");
     } catch {
       return isoString;
     }
@@ -85,58 +86,63 @@ export default function JobRow({ job }: JobRowProps) {
   };
 
   return (
-    <tr className="hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-colors duration-150">
+    <tr className="border-b border-[#0066FF]/10 hover:bg-[#0066FF]/5 transition-colors duration-150">
       <td className="px-6 py-4 whitespace-nowrap">
-        <div className="w-20 h-20 bg-gray-50 dark:bg-gray-900/50 rounded-lg flex items-center justify-center overflow-hidden border border-gray-200 dark:border-gray-700 shadow-sm">
+        <div className="w-28 h-28 bg-[#0066FF]/5 flex items-center justify-center overflow-hidden border-2 border-[#0066FF]/20 rounded-lg">
           {loading && (
-            <div className="flex flex-col items-center gap-1">
-              <div className="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-gray-400"></div>
-              <span className="text-xs text-gray-400">Loading</span>
+            <div className="flex flex-col items-center gap-1.5">
+              <div className="inline-block animate-spin rounded-full h-4 w-4 border-2 border-[#0066FF]/30 border-t-[#0066FF]"></div>
+              <span className="text-[10px] text-[#0066FF] font-mono">LOAD</span>
             </div>
           )}
           {!loading && previewUrl && (
             <img
               src={previewUrl}
               alt={`Preview for ${job.job_name}`}
-              className="w-full h-full object-contain"
+              className="w-full h-full object-contain rounded"
             />
           )}
           {!loading && error && (
-            <span className="text-xs text-gray-400 px-2 text-center">No preview</span>
+            <span className="text-[10px] text-gray-400 font-mono px-2 text-center">
+              N/A
+            </span>
           )}
         </div>
       </td>
       <td className="px-6 py-4">
-        <div className="font-semibold text-gray-900 dark:text-white">
+        <div className="text-sm font-medium text-gray-900">
           {job.job_name}
         </div>
       </td>
       <td className="px-6 py-4 whitespace-nowrap">
         <span
-          className={`px-3 py-1 text-xs font-medium rounded-full ${getStatusColor(
+          className={`px-3 py-1 text-[10px] font-mono uppercase tracking-wider border rounded-full ${getStatusColor(
             job.current_status
           )}`}
         >
           {job.current_status}
         </span>
       </td>
-      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
-        {formatDate(job.last_updated)}
+      <td className="px-6 py-4 whitespace-nowrap">
+        <span className="text-xs text-gray-600 font-mono">
+          {formatDate(job.last_updated)}
+        </span>
       </td>
       <td className="px-6 py-4 whitespace-nowrap">
         <button
           onClick={copyJobId}
-          className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-mono transition-colors duration-150 flex items-center gap-1 group"
+          className="text-xs text-[#0066FF] hover:text-[#0052CC] font-mono transition-colors duration-150 flex items-center gap-1.5 group px-2 py-1 rounded hover:bg-[#0066FF]/10"
           title="Click to copy full ID"
         >
-          <span>{job.job_id.slice(0, 8)}...</span>
+          <span>{job.job_id.slice(0, 8)}</span>
+          <span className="text-gray-400">...</span>
           {copied ? (
-            <span className="text-green-600 dark:text-green-400 text-[10px]">
-              ✓ Copied
+            <span className="text-[10px] text-[#0066FF] font-mono">
+              ✓
             </span>
           ) : (
-            <span className="opacity-0 group-hover:opacity-100 text-[10px] transition-opacity">
-              Copy
+            <span className="opacity-0 group-hover:opacity-100 text-[10px] text-gray-400 font-mono transition-opacity">
+              COPY
             </span>
           )}
         </button>
