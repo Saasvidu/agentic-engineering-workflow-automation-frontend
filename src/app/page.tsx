@@ -39,37 +39,61 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen p-8">
-      <main className="max-w-6xl mx-auto">
-        <h1 className="text-2xl font-bold mb-6">Jobs</h1>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 p-4 sm:p-8">
+      <main className="max-w-7xl mx-auto">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            Jobs
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400 text-sm">
+            View and manage your workflow automation jobs
+          </p>
+        </div>
 
         {error && (
-          <div className="mb-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded text-red-700 dark:text-red-400">
-            {error}
+          <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 rounded-lg shadow-sm">
+            <p className="text-red-700 dark:text-red-400 font-medium">
+              {error}
+            </p>
           </div>
         )}
 
         {loading && jobs.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">Loading jobs...</div>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-12 text-center">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-4"></div>
+            <p className="text-gray-500 dark:text-gray-400">Loading jobs...</p>
+          </div>
         ) : (
           <>
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse">
-                <thead>
-                  <tr className="border-b-2 border-gray-300 dark:border-gray-600">
-                    <th className="p-4 text-left">Preview</th>
-                    <th className="p-4 text-left">Job Name</th>
-                    <th className="p-4 text-left">Status</th>
-                    <th className="p-4 text-left">Last Updated</th>
-                    <th className="p-4 text-left">Job ID</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {jobs.map((job) => (
-                    <JobRow key={job.job_id} job={job} />
-                  ))}
-                </tbody>
-              </table>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-gray-50 dark:bg-gray-900/50">
+                    <tr>
+                      <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
+                        Preview
+                      </th>
+                      <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
+                        Job Name
+                      </th>
+                      <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
+                        Status
+                      </th>
+                      <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
+                        Last Updated
+                      </th>
+                      <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
+                        Job ID
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                    {jobs.map((job) => (
+                      <JobRow key={job.job_id} job={job} />
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
 
             {nextCursor && (
@@ -77,16 +101,26 @@ export default function Home() {
                 <button
                   onClick={handleLoadMore}
                   disabled={loading}
-                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                  className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed font-medium shadow-sm hover:shadow-md transition-all duration-200 disabled:hover:shadow-sm"
                 >
-                  {loading ? "Loading..." : "Load More"}
+                  {loading ? (
+                    <span className="flex items-center gap-2">
+                      <span className="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-white"></span>
+                      Loading...
+                    </span>
+                  ) : (
+                    "Load More"
+                  )}
                 </button>
               </div>
             )}
 
             {!nextCursor && jobs.length > 0 && (
-              <div className="mt-6 text-center text-sm text-gray-500">
-                No more jobs to load
+              <div className="mt-6 text-center">
+                <p className="text-sm text-gray-500 dark:text-gray-400 inline-flex items-center gap-2">
+                  <span>✓</span>
+                  All jobs loaded
+                </p>
               </div>
             )}
           </>
