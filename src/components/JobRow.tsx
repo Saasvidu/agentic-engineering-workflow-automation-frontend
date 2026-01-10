@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { Job, fetchArtifacts } from "@/lib/api";
 
 interface JobRowProps {
@@ -68,7 +69,9 @@ export default function JobRow({ job }: JobRowProps) {
         hour: "2-digit",
         minute: "2-digit",
         hour12: false,
-      }).format(date).replace(",", "");
+      })
+        .format(date)
+        .replace(",", "");
     } catch {
       return isoString;
     }
@@ -88,31 +91,37 @@ export default function JobRow({ job }: JobRowProps) {
   return (
     <tr className="border-b border-[#0066FF]/10 hover:bg-[#0066FF]/5 transition-colors duration-150">
       <td className="px-6 py-4 whitespace-nowrap">
-        <div className="w-28 h-28 bg-[#0066FF]/5 flex items-center justify-center overflow-hidden border-2 border-[#0066FF]/20 rounded-lg">
-          {loading && (
-            <div className="flex flex-col items-center gap-1.5">
-              <div className="inline-block animate-spin rounded-full h-4 w-4 border-2 border-[#0066FF]/30 border-t-[#0066FF]"></div>
-              <span className="text-[10px] text-[#0066FF] font-mono">LOAD</span>
-            </div>
-          )}
-          {!loading && previewUrl && (
-            <img
-              src={previewUrl}
-              alt={`Preview for ${job.job_name}`}
-              className="w-full h-full object-contain rounded"
-            />
-          )}
-          {!loading && error && (
-            <span className="text-[10px] text-gray-400 font-mono px-2 text-center">
-              N/A
-            </span>
-          )}
-        </div>
+        <Link href={`/jobs/${job.job_id}`} className="block">
+          <div className="w-28 h-28 bg-[#0066FF]/5 flex items-center justify-center overflow-hidden border-2 border-[#0066FF]/20 rounded-lg hover:border-[#0066FF]/40 transition-colors">
+            {loading && (
+              <div className="flex flex-col items-center gap-1.5">
+                <div className="inline-block animate-spin rounded-full h-4 w-4 border-2 border-[#0066FF]/30 border-t-[#0066FF]"></div>
+                <span className="text-[10px] text-[#0066FF] font-mono">
+                  LOAD
+                </span>
+              </div>
+            )}
+            {!loading && previewUrl && (
+              <img
+                src={previewUrl}
+                alt={`Preview for ${job.job_name}`}
+                className="w-full h-full object-contain rounded"
+              />
+            )}
+            {!loading && error && (
+              <span className="text-[10px] text-gray-400 font-mono px-2 text-center">
+                N/A
+              </span>
+            )}
+          </div>
+        </Link>
       </td>
       <td className="px-6 py-4">
-        <div className="text-sm font-medium text-gray-900">
-          {job.job_name}
-        </div>
+        <Link href={`/jobs/${job.job_id}`} className="block">
+          <div className="text-sm font-medium text-gray-900 hover:text-[#0066FF] transition-colors">
+            {job.job_name}
+          </div>
+        </Link>
       </td>
       <td className="px-6 py-4 whitespace-nowrap">
         <span
@@ -137,9 +146,7 @@ export default function JobRow({ job }: JobRowProps) {
           <span>{job.job_id.slice(0, 8)}</span>
           <span className="text-gray-400">...</span>
           {copied ? (
-            <span className="text-[10px] text-[#0066FF] font-mono">
-              ✓
-            </span>
+            <span className="text-[10px] text-[#0066FF] font-mono">✓</span>
           ) : (
             <span className="opacity-0 group-hover:opacity-100 text-[10px] text-gray-400 font-mono transition-opacity">
               COPY
