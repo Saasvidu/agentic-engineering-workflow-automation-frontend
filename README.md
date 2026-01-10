@@ -1,5 +1,15 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Environment Setup
+
+Create a `.env.local` file in the root directory with the following variable:
+
+```
+NEXT_PUBLIC_MCP_BASE_URL=https://mcp-server.yellowtree-5333905a.australiaeast.azurecontainerapps.io
+```
+
+This environment variable is required for the application to connect to the MCP Server API.
+
 ## Getting Started
 
 First, run the development server:
